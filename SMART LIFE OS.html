@@ -1,0 +1,3196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART STUDENT LIFE OS</title>
+    
+    <!-- CDN Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* CSS Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light-bg: #f5f7fb;
+            --white: #ffffff;
+            --dark-text: #1f2937;
+            --gray-text: #6b7280;
+            --light-gray: #e5e7eb;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            --box-shadow-hover: 0 12px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Layout Utama */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Desktop */
+        .sidebar {
+            width: 250px;
+            background: var(--white);
+            box-shadow: var(--box-shadow);
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 24px 32px;
+            border-bottom: 1px solid var(--light-gray);
+            margin-bottom: 24px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: var(--border-radius);
+            color: var(--gray-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background-color: rgba(37, 99, 235, 0.08);
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .user-info {
+            padding: 16px 24px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+
+        /* Konten Utama */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            transition: var(--transition);
+        }
+
+        .header {
+            padding: 20px 32px;
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+
+        .date-display {
+            color: var(--gray-text);
+            font-size: 14px;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .content-area {
+            padding: 24px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 24px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--box-shadow-hover);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-right: 16px;
+            opacity: 0.9;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-info p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        th {
+            background-color: rgba(37, 99, 235, 0.05);
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        tr:hover {
+            background-color: rgba(37, 99, 235, 0.03);
+        }
+
+        .today-cell {
+            background-color: rgba(37, 99, 235, 0.1) !important;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--light-gray);
+            color: var(--dark-text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        /* Task Priorities */
+        .priority-low {
+            border-left: 4px solid var(--success);
+        }
+
+        .priority-medium {
+            border-left: 4px solid var(--warning);
+        }
+
+        .priority-high {
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Habit Tracker */
+        .habit-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .habit-info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .habit-streak {
+            font-size: 14px;
+            color: var(--gray-text);
+        }
+
+        .habit-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid var(--light-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .habit-checkbox.checked {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        /* Transaction Items */
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 18px;
+        }
+
+        .income-icon {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .expense-icon {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .transaction-info p {
+            font-size: 14px;
+            color: var(--gray-text);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .income-amount {
+            color: var(--success);
+        }
+
+        .expense-amount {
+            color: var(--danger);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        /* Planner AI */
+        .ai-recommendation {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 24px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .ai-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .ai-title i {
+            color: var(--primary);
+            margin-right: 12px;
+            font-size: 24px;
+        }
+
+        .ai-title h3 {
+            color: var(--dark-text);
+            font-weight: 600;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-hover);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .toast-success .toast-icon {
+            background-color: var(--success);
+        }
+
+        .toast-error .toast-icon {
+            background-color: var(--danger);
+        }
+
+        .toast-info .toast-icon {
+            background-color: var(--primary);
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 20px;
+        }
+
+        .login-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--box-shadow-hover);
+            text-align: center;
+        }
+
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            color: var(--gray-text);
+            margin-bottom: 32px;
+        }
+
+        /* Mobile Navigation Bottom */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--white);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            padding: 12px 0;
+            z-index: 100;
+        }
+
+        .mobile-nav-list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gray-text);
+            font-size: 12px;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-link.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-text);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            color: var(--light-gray);
+            margin-bottom: 16px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(37, 99, 235, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Mobile Layout */
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                z-index: 200;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-nav {
+                display: block;
+            }
+
+            .header {
+                padding: 16px 20px;
+            }
+
+            .content-area {
+                padding: 20px;
+                padding-bottom: 80px; /* Ruang untuk mobile nav */
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .login-card {
+                padding: 32px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-title {
+                font-size: 20px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+        }
+
+        /* Section Visibility */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="login-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="login-title">SMART STUDENT LIFE OS</h1>
+            <p class="login-subtitle">Dashboard kehidupan pelajar yang cerdas</p>
+            
+            <div class="form-group">
+                <input type="text" id="usernameInput" class="form-input" placeholder="Masukkan nama Anda" autocomplete="off">
+            </div>
+            
+            <button id="loginButton" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> Mulai Aplikasi
+            </button>
+            
+            <p class="login-subtitle" style="margin-top: 24px; font-size: 14px;">
+                Data akan disimpan secara lokal di perangkat Anda
+            </p>
+        </div>
+    </div>
+
+    <!-- Main App (Awalnya tersembunyi) -->
+    <div id="appContainer" class="app-container" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="logo-text">SMART LIFE OS</div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt nav-icon"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="schedule">
+                        <i class="fas fa-calendar-alt nav-icon"></i> Jadwal
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="tasks">
+                        <i class="fas fa-tasks nav-icon"></i> Tugas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="habits">
+                        <i class="fas fa-chart-line nav-icon"></i> Habit Tracker
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="finance">
+                        <i class="fas fa-wallet nav-icon"></i> Keuangan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="statistics">
+                        <i class="fas fa-chart-bar nav-icon"></i> Statistik
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="planner">
+                        <i class="fas fa-robot nav-icon"></i> Smart Planner
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">S</div>
+                <div class="user-name" id="userName">Pelajar</div>
+            </div>
+        </aside>
+        
+        <!-- Konten Utama -->
+        <main class="main-content">
+            <header class="header">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="header-title" id="pageTitle">Dashboard</h1>
+                <div class="date-display" id="currentDate"></div>
+            </header>
+            
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="content-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="pendingTasks">0</h3>
+                                <p>Tugas Tertunda</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="habitStreak">0</h3>
+                                <p>Habit Streak</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="currentBalance">Rp 0</h3>
+                                <p>Saldo Tersedia</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="todayClasses">0</h3>
+                                <p>Kelas Hari Ini</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <!-- Jadwal Hari Ini -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Jadwal Hari Ini</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                            </div>
+                            <div id="todayScheduleList">
+                                <p class="empty-state">Tidak ada jadwal hari ini</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Tugas Mendesak -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Tugas Mendesak</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                            </div>
+                            <div id="urgentTasksList">
+                                <p class="empty-state">Tidak ada tugas mendesak</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Habit Progress -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Progress Habit</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div id="habitsProgress">
+                                <p class="empty-state">Belum ada habit yang dilacak</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Rekomendasi Planner -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Rekomendasi Smart Planner</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                            </div>
+                            <div id="plannerRecommendation">
+                                <p class="empty-state">Belum ada rekomendasi</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Jadwal Section -->
+                <section id="schedule" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Jadwal Pelajaran</h2>
+                            <button class="btn btn-primary" id="addClassBtn">
+                                <i class="fas fa-plus"></i> Tambah Pelajaran
+                            </button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table id="scheduleTable">
+                                <thead>
+                                    <tr>
+                                        <th>Waktu</th>
+                                        <th>Senin</th>
+                                        <th>Selasa</th>
+                                        <th>Rabu</th>
+                                        <th>Kamis</th>
+                                        <th>Jumat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Baris jadwal akan diisi oleh JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Tambah Pelajaran -->
+                    <div id="addClassForm" class="card" style="display: none; margin-top: 24px;">
+                        <div class="card-header">
+                            <h2 class="card-title">Tambah Pelajaran Baru</h2>
+                        </div>
+                        
+                        <form id="classForm">
+                            <div class="form-group">
+                                <label class="form-label">Nama Pelajaran</label>
+                                <input type="text" class="form-input" id="className" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Hari</label>
+                                <select class="form-select" id="classDay" required>
+                                    <option value="">Pilih Hari</option>
+                                    <option value="Senin">Senin</option>
+                                    <option value="Selasa">Selasa</option>
+                                    <option value="Rabu">Rabu</option>
+                                    <option value="Kamis">Kamis</option>
+                                    <option value="Jumat">Jumat</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Waktu Mulai</label>
+                                <input type="time" class="form-input" id="classStartTime" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Waktu Selesai</label>
+                                <input type="time" class="form-input" id="classEndTime" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Ruangan</label>
+                                <input type="text" class="form-input" id="classRoom">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Simpan Pelajaran
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelClassBtn">
+                                Batal
+                            </button>
+                        </form>
+                    </div>
+                </section>
+                
+                <!-- Tugas Section -->
+                <section id="tasks" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Manajemen Tugas</h2>
+                            <button class="btn btn-primary" id="addTaskBtn">
+                                <i class="fas fa-plus"></i> Tambah Tugas
+                            </button>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <select class="form-select" id="taskFilter">
+                                <option value="all">Semua Tugas</option>
+                                <option value="pending">Tertunda</option>
+                                <option value="completed">Selesai</option>
+                                <option value="urgent">Mendesak</option>
+                            </select>
+                        </div>
+                        
+                        <div id="tasksList">
+                            <p class="empty-state">Belum ada tugas. Tambah tugas baru untuk memulai.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Tambah Tugas -->
+                    <div id="addTaskForm" class="card" style="display: none; margin-top: 24px;">
+                        <div class="card-header">
+                            <h2 class="card-title">Tambah Tugas Baru</h2>
+                        </div>
+                        
+                        <form id="taskForm">
+                            <div class="form-group">
+                                <label class="form-label">Judul Tugas</label>
+                                <input type="text" class="form-input" id="taskTitle" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Mata Pelajaran</label>
+                                <input type="text" class="form-input" id="taskSubject" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Deskripsi</label>
+                                <textarea class="form-input" id="taskDescription" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Deadline</label>
+                                <input type="datetime-local" class="form-input" id="taskDeadline" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Prioritas</label>
+                                <select class="form-select" id="taskPriority" required>
+                                    <option value="low">Rendah</option>
+                                    <option value="medium">Sedang</option>
+                                    <option value="high">Tinggi</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Simpan Tugas
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelTaskBtn">
+                                Batal
+                            </button>
+                        </form>
+                    </div>
+                </section>
+                
+                <!-- Habit Tracker Section -->
+                <section id="habits" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Habit Tracker</h2>
+                            <button class="btn btn-primary" id="addHabitBtn">
+                                <i class="fas fa-plus"></i> Tambah Habit
+                            </button>
+                        </div>
+                        
+                        <div id="habitsList">
+                            <p class="empty-state">Belum ada habit yang dilacak. Tambah habit untuk membangun rutinitas positif.</p>
+                        </div>
+                        
+                        <!-- Progress Ringkasan -->
+                        <div style="margin-top: 32px;">
+                            <h3 style="margin-bottom: 16px;">Progress Mingguan</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="weeklyHabitProgress" style="width: 0%"></div>
+                            </div>
+                            <p style="text-align: center; margin-top: 8px; font-size: 14px;" id="weeklyProgressText">0% habit selesai minggu ini</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Tambah Habit -->
+                    <div id="addHabitForm" class="card" style="display: none; margin-top: 24px;">
+                        <div class="card-header">
+                            <h2 class="card-title">Tambah Habit Baru</h2>
+                        </div>
+                        
+                        <form id="habitForm">
+                            <div class="form-group">
+                                <label class="form-label">Nama Habit</label>
+                                <input type="text" class="form-input" id="habitName" required placeholder="Contoh: Olahraga 30 menit, Membaca 10 halaman">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" id="habitCategory">
+                                    <option value="kesehatan">Kesehatan</option>
+                                    <option value="belajar">Belajar</option>
+                                    <option value="produktivitas">Produktivitas</option>
+                                    <option value="hobi">Hobi</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Target per Minggu</label>
+                                <input type="number" class="form-input" id="habitTarget" min="1" max="7" value="5" required>
+                                <small style="color: var(--gray-text);">Hari dalam seminggu</small>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Simpan Habit
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelHabitBtn">
+                                Batal
+                            </button>
+                        </form>
+                    </div>
+                </section>
+                
+                <!-- Keuangan Section -->
+                <section id="finance" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Keuangan Pribadi</h2>
+                            <div>
+                                <button class="btn btn-primary" id="addIncomeBtn" style="margin-right: 8px;">
+                                    <i class="fas fa-plus"></i> Pemasukan
+                                </button>
+                                <button class="btn btn-secondary" id="addExpenseBtn">
+                                    <i class="fas fa-minus"></i> Pengeluaran
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Ringkasan Keuangan -->
+                        <div class="stats-grid" style="margin-bottom: 32px;">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="totalBalance">Rp 0</h3>
+                                    <p>Total Saldo</p>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <div class="stat-icon">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="totalIncome">Rp 0</h3>
+                                    <p>Total Pemasukan</p>
+                                </div>
+                            </div>
+                            <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <div class="stat-icon">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3 id="totalExpense">Rp 0</h3>
+                                    <p>Total Pengeluaran</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="margin-bottom: 16px;">Riwayat Transaksi</h3>
+                        <div id="transactionsList">
+                            <p class="empty-state">Belum ada transaksi. Tambah pemasukan atau pengeluaran pertama Anda.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Transaksi -->
+                    <div id="transactionForm" class="card" style="display: none; margin-top: 24px;">
+                        <div class="card-header">
+                            <h2 class="card-title" id="transactionFormTitle">Tambah Transaksi</h2>
+                        </div>
+                        
+                        <form id="financeForm">
+                            <div class="form-group">
+                                <label class="form-label">Jumlah</label>
+                                <input type="number" class="form-input" id="transactionAmount" required min="1">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" id="transactionCategory">
+                                    <option value="uang saku">Uang Saku</option>
+                                    <option value="part time">Part Time</option>
+                                    <option value="hadiah">Hadiah</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Deskripsi</label>
+                                <input type="text" class="form-input" id="transactionDescription" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Tanggal</label>
+                                <input type="date" class="form-input" id="transactionDate" required>
+                            </div>
+                            
+                            <input type="hidden" id="transactionType" value="income">
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Simpan Transaksi
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelTransactionBtn">
+                                Batal
+                            </button>
+                        </form>
+                    </div>
+                </section>
+                
+                <!-- Statistik Section -->
+                <section id="statistics" class="content-section">
+                    <div class="dashboard-grid">
+                        <!-- Grafik Tugas -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Statistik Tugas</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="tasksChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Grafik Habit -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Statistik Habit</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="habitsChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Grafik Keuangan -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Statistik Keuangan</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="financeChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Ringkasan Statistik -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Ringkasan Produktivitas</h2>
+                                <div class="card-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                            </div>
+                            <div id="productivityStats">
+                                <div class="stat-card" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); margin-bottom: 16px;">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="completedTasksStat">0</h3>
+                                        <p>Tugas Selesai</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); margin-bottom: 16px;">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-fire"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="totalHabitDays">0</h3>
+                                        <p>Hari Habit Tercapai</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-percentage"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h3 id="productivityRate">0%</h3>
+                                        <p>Tingkat Produktivitas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Smart Planner Section -->
+                <section id="planner" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Smart Planner</h2>
+                            <div class="card-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="ai-recommendation">
+                            <div class="ai-title">
+                                <i class="fas fa-lightbulb"></i>
+                                <h3>Rekomendasi Belajar Hari Ini</h3>
+                            </div>
+                            <div id="aiRecommendationContent">
+                                <p>Smart Planner menganalisis jadwal, tugas, dan habit Anda untuk memberikan rekomendasi belajar yang optimal.</p>
+                                <div id="plannerAnalysis">
+                                    <p>Memuat analisis...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 32px;">
+                            <h3 style="margin-bottom: 16px;">Jadwal Optimal Hari Ini</h3>
+                            <div id="optimalSchedule">
+                                <p class="empty-state">Belum ada analisis jadwal optimal</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 32px;">
+                            <h3 style="margin-bottom: 16px;">Analisis Deadline</h3>
+                            <div id="deadlineAnalysis">
+                                <p class="empty-state">Tidak ada deadline mendesak</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <ul class="mobile-nav-list">
+                <li>
+                    <a href="#" class="mobile-nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt mobile-nav-icon"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="mobile-nav-link" data-section="schedule">
+                        <i class="fas fa-calendar-alt mobile-nav-icon"></i> Jadwal
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="mobile-nav-link" data-section="tasks">
+                        <i class="fas fa-tasks mobile-nav-icon"></i> Tugas
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="mobile-nav-link" data-section="habits">
+                        <i class="fas fa-chart-line mobile-nav-icon"></i> Habit
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="mobile-nav-link" data-section="finance">
+                        <i class="fas fa-wallet mobile-nav-icon"></i> Keuangan
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="toast-message">Operasi berhasil disimpan</div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ============================================
+        // MODUL UTAMA APLIKASI
+        // ============================================
+        
+        // State aplikasi
+        const appState = {
+            currentUser: '',
+            currentSection: 'dashboard',
+            scheduleData: [],
+            tasksData: [],
+            habitsData: [],
+            financeData: []
+        };
+        
+        // Inisialisasi aplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+        });
+        
+        // Fungsi inisialisasi aplikasi
+        function initApp() {
+            // Cek apakah user sudah login
+            const savedUser = localStorage.getItem('studentLifeOS_user');
+            
+            if (savedUser) {
+                // User sudah login, tampilkan aplikasi
+                showApp(savedUser);
+            } else {
+                // User belum login, tampilkan login screen
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('appContainer').style.display = 'none';
+                
+                // Setup login button
+                document.getElementById('loginButton').addEventListener('click', handleLogin);
+                document.getElementById('usernameInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+            }
+            
+            // Setup date display
+            updateCurrentDate();
+            
+            // Setup mobile menu toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Setup forms
+            setupForms();
+            
+            // Setup filter
+            document.getElementById('taskFilter').addEventListener('change', filterTasks);
+            
+            // Load data dari localStorage
+            loadAllData();
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Setup charts
+            setTimeout(initCharts, 500);
+            
+            // Setup planner analysis
+            setTimeout(updatePlannerAnalysis, 1000);
+        }
+        
+        // ============================================
+        // FUNGSI LOGIN & USER MANAGEMENT
+        // ============================================
+        
+        // Handle login
+        function handleLogin() {
+            const usernameInput = document.getElementById('usernameInput');
+            const username = usernameInput.value.trim();
+            
+            if (username.length < 2) {
+                showToast('Masukkan nama Anda (minimal 2 karakter)', 'error');
+                usernameInput.focus();
+                return;
+            }
+            
+            // Simpan user ke localStorage
+            localStorage.setItem('studentLifeOS_user', username);
+            
+            // Tampilkan aplikasi
+            showApp(username);
+            
+            showToast(`Selamat datang, ${username}!`, 'success');
+        }
+        
+        // Tampilkan aplikasi setelah login
+        function showApp(username) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'flex';
+            
+            // Update user info
+            document.getElementById('userName').textContent = username;
+            document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+            appState.currentUser = username;
+        }
+        
+        // ============================================
+        // FUNGSI NAVIGASI
+        // ============================================
+        
+        // Setup navigation
+        function setupNavigation() {
+            // Desktop navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update mobile nav
+                    const section = this.getAttribute('data-section');
+                    updateMobileNav(section);
+                    
+                    // Show section
+                    showSection(section);
+                    
+                    // Update page title
+                    updatePageTitle(section);
+                    
+                    // Close mobile menu jika terbuka
+                    document.querySelector('.sidebar').classList.remove('active');
+                });
+            });
+            
+            // Mobile navigation
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active link
+                    mobileNavLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update desktop nav
+                    const section = this.getAttribute('data-section');
+                    updateDesktopNav(section);
+                    
+                    // Show section
+                    showSection(section);
+                    
+                    // Update page title
+                    updatePageTitle(section);
+                });
+            });
+        }
+        
+        // Update mobile navigation active state
+        function updateMobileNav(section) {
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            mobileNavLinks.forEach(link => {
+                if (link.getAttribute('data-section') === section) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        // Update desktop navigation active state
+        function updateDesktopNav(section) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-section') === section) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        // Tampilkan section yang dipilih
+        function showSection(section) {
+            // Sembunyikan semua section
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            // Tampilkan section yang dipilih
+            document.getElementById(section).classList.add('active');
+            appState.currentSection = section;
+            
+            // Scroll ke atas
+            window.scrollTo(0, 0);
+            
+            // Update konten khusus untuk section tertentu
+            if (section === 'schedule') {
+                renderScheduleTable();
+            } else if (section === 'statistics') {
+                updateCharts();
+            } else if (section === 'planner') {
+                updatePlannerAnalysis();
+            }
+        }
+        
+        // Update judul halaman
+        function updatePageTitle(section) {
+            const titles = {
+                dashboard: 'Dashboard',
+                schedule: 'Jadwal Pelajaran',
+                tasks: 'Manajemen Tugas',
+                habits: 'Habit Tracker',
+                finance: 'Keuangan Pribadi',
+                statistics: 'Statistik',
+                planner: 'Smart Planner'
+            };
+            
+            document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
+        }
+        
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+        
+        // ============================================
+        // FUNGSI FORM HANDLING
+        // ============================================
+        
+        // Setup semua form
+        function setupForms() {
+            // Form jadwal pelajaran
+            document.getElementById('addClassBtn').addEventListener('click', () => {
+                document.getElementById('addClassForm').style.display = 'block';
+                document.getElementById('classForm').reset();
+            });
+            
+            document.getElementById('cancelClassBtn').addEventListener('click', () => {
+                document.getElementById('addClassForm').style.display = 'none';
+            });
+            
+            document.getElementById('classForm').addEventListener('submit', handleAddClass);
+            
+            // Form tugas
+            document.getElementById('addTaskBtn').addEventListener('click', () => {
+                document.getElementById('addTaskForm').style.display = 'block';
+                document.getElementById('taskForm').reset();
+                
+                // Set default deadline besok
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const formattedDate = tomorrow.toISOString().slice(0, 16);
+                document.getElementById('taskDeadline').value = formattedDate;
+            });
+            
+            document.getElementById('cancelTaskBtn').addEventListener('click', () => {
+                document.getElementById('addTaskForm').style.display = 'none';
+            });
+            
+            document.getElementById('taskForm').addEventListener('submit', handleAddTask);
+            
+            // Form habit
+            document.getElementById('addHabitBtn').addEventListener('click', () => {
+                document.getElementById('addHabitForm').style.display = 'block';
+                document.getElementById('habitForm').reset();
+            });
+            
+            document.getElementById('cancelHabitBtn').addEventListener('click', () => {
+                document.getElementById('addHabitForm').style.display = 'none';
+            });
+            
+            document.getElementById('habitForm').addEventListener('submit', handleAddHabit);
+            
+            // Form keuangan
+            document.getElementById('addIncomeBtn').addEventListener('click', () => {
+                document.getElementById('transactionForm').style.display = 'block';
+                document.getElementById('transactionFormTitle').textContent = 'Tambah Pemasukan';
+                document.getElementById('transactionType').value = 'income';
+                document.getElementById('financeForm').reset();
+                
+                // Set default category untuk income
+                document.getElementById('transactionCategory').innerHTML = `
+                    <option value="uang saku">Uang Saku</option>
+                    <option value="part time">Part Time</option>
+                    <option value="hadiah">Hadiah</option>
+                    <option value="lainnya">Lainnya</option>
+                `;
+                
+                // Set default date hari ini
+                const today = new Date().toISOString().slice(0, 10);
+                document.getElementById('transactionDate').value = today;
+            });
+            
+            document.getElementById('addExpenseBtn').addEventListener('click', () => {
+                document.getElementById('transactionForm').style.display = 'block';
+                document.getElementById('transactionFormTitle').textContent = 'Tambah Pengeluaran';
+                document.getElementById('transactionType').value = 'expense';
+                document.getElementById('financeForm').reset();
+                
+                // Set default category untuk expense
+                document.getElementById('transactionCategory').innerHTML = `
+                    <option value="makanan">Makanan</option>
+                    <option value="transportasi">Transportasi</option>
+                    <option value="belanja">Belanja</option>
+                    <option value="hiburan">Hiburan</option>
+                    <option value="pendidikan">Pendidikan</option>
+                    <option value="lainnya">Lainnya</option>
+                `;
+                
+                // Set default date hari ini
+                const today = new Date().toISOString().slice(0, 10);
+                document.getElementById('transactionDate').value = today;
+            });
+            
+            document.getElementById('cancelTransactionBtn').addEventListener('click', () => {
+                document.getElementById('transactionForm').style.display = 'none';
+            });
+            
+            document.getElementById('financeForm').addEventListener('submit', handleAddTransaction);
+        }
+        
+        // ============================================
+        // FUNGSI DATA MANAGEMENT
+        // ============================================
+        
+        // Load semua data dari localStorage
+        function loadAllData() {
+            // Load jadwal
+            const savedSchedule = localStorage.getItem('studentLifeOS_schedule');
+            appState.scheduleData = savedSchedule ? JSON.parse(savedSchedule) : [];
+            
+            // Load tugas
+            const savedTasks = localStorage.getItem('studentLifeOS_tasks');
+            appState.tasksData = savedTasks ? JSON.parse(savedTasks) : [];
+            
+            // Load habit
+            const savedHabits = localStorage.getItem('studentLifeOS_habits');
+            appState.habitsData = savedHabits ? JSON.parse(savedHabits) : [];
+            
+            // Load keuangan
+            const savedFinance = localStorage.getItem('studentLifeOS_finance');
+            appState.financeData = savedFinance ? JSON.parse(savedFinance) : [];
+            
+            // Render data yang sudah di-load
+            renderTasksList();
+            renderHabitsList();
+            renderTransactionsList();
+        }
+        
+        // Simpan semua data ke localStorage
+        function saveAllData() {
+            localStorage.setItem('studentLifeOS_schedule', JSON.stringify(appState.scheduleData));
+            localStorage.setItem('studentLifeOS_tasks', JSON.stringify(appState.tasksData));
+            localStorage.setItem('studentLifeOS_habits', JSON.stringify(appState.habitsData));
+            localStorage.setItem('studentLifeOS_finance', JSON.stringify(appState.financeData));
+        }
+        
+        // ============================================
+        // FUNGSI JADWAL PELAJARAN
+        // ============================================
+        
+        // Handle tambah pelajaran
+        function handleAddClass(e) {
+            e.preventDefault();
+            
+            const className = document.getElementById('className').value.trim();
+            const classDay = document.getElementById('classDay').value;
+            const classStartTime = document.getElementById('classStartTime').value;
+            const classEndTime = document.getElementById('classEndTime').value;
+            const classRoom = document.getElementById('classRoom').value.trim();
+            
+            if (!className || !classDay || !classStartTime || !classEndTime) {
+                showToast('Harap isi semua field yang wajib', 'error');
+                return;
+            }
+            
+            // Buat objek pelajaran baru
+            const newClass = {
+                id: Date.now(),
+                name: className,
+                day: classDay,
+                startTime: classStartTime,
+                endTime: classEndTime,
+                room: classRoom || '-'
+            };
+            
+            // Tambahkan ke data
+            appState.scheduleData.push(newClass);
+            
+            // Simpan ke localStorage
+            saveAllData();
+            
+            // Update tampilan
+            renderScheduleTable();
+            
+            // Sembunyikan form
+            document.getElementById('addClassForm').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('classForm').reset();
+            
+            // Tampilkan notifikasi
+            showToast('Pelajaran berhasil ditambahkan', 'success');
+            
+            // Update dashboard
+            updateDashboard();
+        }
+        
+        // Render tabel jadwal
+        function renderScheduleTable() {
+            const scheduleTable = document.getElementById('scheduleTable');
+            const tbody = scheduleTable.querySelector('tbody');
+            
+            // Kosongkan tbody
+            tbody.innerHTML = '';
+            
+            // Buat array waktu dari 07:00 sampai 16:00 setiap jam
+            const timeSlots = [];
+            for (let hour = 7; hour <= 16; hour++) {
+                const time = `${hour.toString().padStart(2, '0')}:00`;
+                timeSlots.push(time);
+            }
+            
+            // Daftar hari
+            const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+            
+            // Buat baris untuk setiap time slot
+            timeSlots.forEach(time => {
+                const row = document.createElement('tr');
+                
+                // Kolom waktu
+                const timeCell = document.createElement('td');
+                timeCell.textContent = time;
+                timeCell.style.fontWeight = '600';
+                row.appendChild(timeCell);
+                
+                // Kolom untuk setiap hari
+                days.forEach(day => {
+                    const cell = document.createElement('td');
+                    
+                    // Cari pelajaran yang sesuai dengan hari dan waktu ini
+                    const classesForDay = appState.scheduleData.filter(cls => 
+                        cls.day === day && 
+                        cls.startTime <= time && 
+                        cls.endTime >= time
+                    );
+                    
+                    if (classesForDay.length > 0) {
+                        const cls = classesForDay[0];
+                        cell.innerHTML = `
+                            <div style="background-color: rgba(37, 99, 235, 0.1); padding: 8px; border-radius: 8px; border-left: 4px solid #2563eb;">
+                                <strong>${cls.name}</strong>
+                                <div style="font-size: 12px; color: #6b7280;">${cls.startTime} - ${cls.endTime}</div>
+                                <div style="font-size: 12px; color: #6b7280;">${cls.room}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    // Highlight hari ini
+                    const today = new Date().toLocaleDateString('id-ID', { weekday: 'long' });
+                    if (day.toLowerCase() === today.toLowerCase()) {
+                        cell.classList.add('today-cell');
+                    }
+                    
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // ============================================
+        // FUNGSI MANAJEMEN TUGAS
+        // ============================================
+        
+        // Handle tambah tugas
+        function handleAddTask(e) {
+            e.preventDefault();
+            
+            const taskTitle = document.getElementById('taskTitle').value.trim();
+            const taskSubject = document.getElementById('taskSubject').value.trim();
+            const taskDescription = document.getElementById('taskDescription').value.trim();
+            const taskDeadline = document.getElementById('taskDeadline').value;
+            const taskPriority = document.getElementById('taskPriority').value;
+            
+            if (!taskTitle || !taskSubject || !taskDeadline) {
+                showToast('Harap isi semua field yang wajib', 'error');
+                return;
+            }
+            
+            // Buat objek tugas baru
+            const newTask = {
+                id: Date.now(),
+                title: taskTitle,
+                subject: taskSubject,
+                description: taskDescription || '',
+                deadline: taskDeadline,
+                priority: taskPriority,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Tambahkan ke data
+            appState.tasksData.push(newTask);
+            
+            // Simpan ke localStorage
+            saveAllData();
+            
+            // Update tampilan
+            renderTasksList();
+            
+            // Sembunyikan form
+            document.getElementById('addTaskForm').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('taskForm').reset();
+            
+            // Tampilkan notifikasi
+            showToast('Tugas berhasil ditambahkan', 'success');
+            
+            // Update dashboard
+            updateDashboard();
+        }
+        
+        // Render daftar tugas
+        function renderTasksList() {
+            const tasksList = document.getElementById('tasksList');
+            const filter = document.getElementById('taskFilter').value;
+            
+            // Filter tugas
+            let filteredTasks = [...appState.tasksData];
+            
+            if (filter === 'pending') {
+                filteredTasks = filteredTasks.filter(task => !task.completed);
+            } else if (filter === 'completed') {
+                filteredTasks = filteredTasks.filter(task => task.completed);
+            } else if (filter === 'urgent') {
+                filteredTasks = filteredTasks.filter(task => {
+                    if (task.completed) return false;
+                    
+                    const deadline = new Date(task.deadline);
+                    const now = new Date();
+                    const diffHours = (deadline - now) / (1000 * 60 * 60);
+                    
+                    return diffHours <= 48; // Deadline dalam 48 jam
+                });
+            }
+            
+            // Urutkan berdasarkan deadline (yang paling dekat duluan)
+            filteredTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+            
+            if (filteredTasks.length === 0) {
+                tasksList.innerHTML = '<p class="empty-state">Tidak ada tugas yang sesuai dengan filter</p>';
+                return;
+            }
+            
+            // Buat HTML untuk daftar tugas
+            let tasksHTML = '';
+            
+            filteredTasks.forEach(task => {
+                const deadlineDate = new Date(task.deadline);
+                const now = new Date();
+                const diffDays = Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24));
+                
+                let deadlineText = '';
+                if (diffDays < 0) {
+                    deadlineText = `<span style="color: #ef4444;">Terlambat ${Math.abs(diffDays)} hari</span>`;
+                } else if (diffDays === 0) {
+                    deadlineText = '<span style="color: #f59e0b;">Hari ini</span>';
+                } else if (diffDays === 1) {
+                    deadlineText = '<span style="color: #f59e0b;">Besok</span>';
+                } else {
+                    deadlineText = `${diffDays} hari lagi`;
+                }
+                
+                const priorityClass = `priority-${task.priority}`;
+                const checked = task.completed ? 'checked' : '';
+                
+                tasksHTML += `
+                    <div class="habit-item ${priorityClass}" data-task-id="${task.id}">
+                        <div class="habit-info">
+                            <h4>${task.title}</h4>
+                            <div class="habit-streak">
+                                <i class="fas fa-book"></i> ${task.subject} • 
+                                <i class="fas fa-calendar"></i> ${formatDate(deadlineDate)} • 
+                                ${deadlineText}
+                            </div>
+                        </div>
+                        <div class="habit-checkbox ${task.completed ? 'checked' : ''}" data-task-id="${task.id}">
+                            ${task.completed ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            tasksList.innerHTML = tasksHTML;
+            
+            // Tambahkan event listener untuk checkbox
+            document.querySelectorAll('.habit-checkbox[data-task-id]').forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    const taskId = parseInt(this.getAttribute('data-task-id'));
+                    toggleTaskCompletion(taskId);
+                });
+            });
+        }
+        
+        // Toggle status penyelesaian tugas
+        function toggleTaskCompletion(taskId) {
+            const taskIndex = appState.tasksData.findIndex(task => task.id === taskId);
+            
+            if (taskIndex !== -1) {
+                appState.tasksData[taskIndex].completed = !appState.tasksData[taskIndex].completed;
+                saveAllData();
+                renderTasksList();
+                updateDashboard();
+                updateCharts();
+                
+                const task = appState.tasksData[taskIndex];
+                const message = task.completed ? 'Tugas selesai!' : 'Tugas ditandai belum selesai';
+                showToast(message, 'success');
+            }
+        }
+        
+        // Filter tugas berdasarkan dropdown
+        function filterTasks() {
+            renderTasksList();
+        }
+        
+        // ============================================
+        // FUNGSI HABIT TRACKER
+        // ============================================
+        
+        // Handle tambah habit
+        function handleAddHabit(e) {
+            e.preventDefault();
+            
+            const habitName = document.getElementById('habitName').value.trim();
+            const habitCategory = document.getElementById('habitCategory').value;
+            const habitTarget = parseInt(document.getElementById('habitTarget').value);
+            
+            if (!habitName || habitTarget < 1 || habitTarget > 7) {
+                showToast('Harap isi semua field dengan benar', 'error');
+                return;
+            }
+            
+            // Buat objek habit baru
+            const newHabit = {
+                id: Date.now(),
+                name: habitName,
+                category: habitCategory,
+                targetPerWeek: habitTarget,
+                completedDays: [],
+                streak: 0,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Tambahkan ke data
+            appState.habitsData.push(newHabit);
+            
+            // Simpan ke localStorage
+            saveAllData();
+            
+            // Update tampilan
+            renderHabitsList();
+            
+            // Sembunyikan form
+            document.getElementById('addHabitForm').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('habitForm').reset();
+            
+            // Tampilkan notifikasi
+            showToast('Habit berhasil ditambahkan', 'success');
+            
+            // Update dashboard
+            updateDashboard();
+        }
+        
+        // Render daftar habit
+        function renderHabitsList() {
+            const habitsList = document.getElementById('habitsList');
+            const today = new Date().toISOString().slice(0, 10);
+            
+            if (appState.habitsData.length === 0) {
+                habitsList.innerHTML = '<p class="empty-state">Belum ada habit yang dilacak. Tambah habit untuk membangun rutinitas positif.</p>';
+                document.getElementById('weeklyHabitProgress').style.width = '0%';
+                document.getElementById('weeklyProgressText').textContent = '0% habit selesai minggu ini';
+                return;
+            }
+            
+            // Buat HTML untuk daftar habit
+            let habitsHTML = '';
+            let totalCompleted = 0;
+            let totalPossible = 0;
+            
+            appState.habitsData.forEach(habit => {
+                const isCompletedToday = habit.completedDays.includes(today);
+                const completedCount = habit.completedDays.length;
+                const progressPercent = Math.min(100, (completedCount / 7) * 100);
+                
+                totalCompleted += completedCount;
+                totalPossible += 7;
+                
+                habitsHTML += `
+                    <div class="habit-item" data-habit-id="${habit.id}">
+                        <div class="habit-info">
+                            <h4>${habit.name}</h4>
+                            <div class="habit-streak">
+                                <i class="fas fa-${getCategoryIcon(habit.category)}"></i> ${habit.category} • 
+                                Streak: ${habit.streak} hari • 
+                                Target: ${habit.targetPerWeek}/minggu
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-checkbox ${isCompletedToday ? 'checked' : ''}" data-habit-id="${habit.id}">
+                            ${isCompletedToday ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            habitsList.innerHTML = habitsHTML;
+            
+            // Update progress mingguan
+            const weeklyProgressPercent = totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
+            document.getElementById('weeklyHabitProgress').style.width = `${weeklyProgressPercent}%`;
+            document.getElementById('weeklyProgressText').textContent = `${weeklyProgressPercent}% habit selesai minggu ini`;
+            
+            // Tambahkan event listener untuk checkbox
+            document.querySelectorAll('.habit-checkbox[data-habit-id]').forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    const habitId = parseInt(this.getAttribute('data-habit-id'));
+                    toggleHabitCompletion(habitId);
+                });
+            });
+        }
+        
+        // Toggle status penyelesaian habit untuk hari ini
+        function toggleHabitCompletion(habitId) {
+            const habitIndex = appState.habitsData.findIndex(habit => habit.id === habitId);
+            
+            if (habitIndex !== -1) {
+                const habit = appState.habitsData[habitIndex];
+                const today = new Date().toISOString().slice(0, 10);
+                const completedIndex = habit.completedDays.indexOf(today);
+                
+                if (completedIndex === -1) {
+                    // Tandai sebagai selesai hari ini
+                    habit.completedDays.push(today);
+                    
+                    // Update streak
+                    updateHabitStreak(habit);
+                    
+                    showToast('Habit selesai hari ini!', 'success');
+                } else {
+                    // Hapus dari daftar selesai
+                    habit.completedDays.splice(completedIndex, 1);
+                    
+                    // Update streak
+                    updateHabitStreak(habit);
+                    
+                    showToast('Habit dibatalkan untuk hari ini', 'info');
+                }
+                
+                saveAllData();
+                renderHabitsList();
+                updateDashboard();
+                updateCharts();
+            }
+        }
+        
+        // Update streak habit
+        function updateHabitStreak(habit) {
+            // Urutkan tanggal dari yang terbaru
+            const sortedDates = [...habit.completedDays].sort((a, b) => new Date(b) - new Date(a));
+            
+            let streak = 0;
+            let currentDate = new Date();
+            
+            // Cek streak berurutan
+            for (let i = 0; i < sortedDates.length; i++) {
+                const date = new Date(sortedDates[i]);
+                const diffDays = Math.floor((currentDate - date) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === i) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            habit.streak = streak;
+        }
+        
+        // ============================================
+        // FUNGSI MANAJEMEN KEUANGAN
+        // ============================================
+        
+        // Handle tambah transaksi
+        function handleAddTransaction(e) {
+            e.preventDefault();
+            
+            const transactionAmount = parseInt(document.getElementById('transactionAmount').value);
+            const transactionCategory = document.getElementById('transactionCategory').value;
+            const transactionDescription = document.getElementById('transactionDescription').value.trim();
+            const transactionDate = document.getElementById('transactionDate').value;
+            const transactionType = document.getElementById('transactionType').value;
+            
+            if (!transactionAmount || transactionAmount < 1 || !transactionDescription || !transactionDate) {
+                showToast('Harap isi semua field dengan benar', 'error');
+                return;
+            }
+            
+            // Buat objek transaksi baru
+            const newTransaction = {
+                id: Date.now(),
+                amount: transactionAmount,
+                category: transactionCategory,
+                description: transactionDescription,
+                date: transactionDate,
+                type: transactionType, // 'income' atau 'expense'
+                createdAt: new Date().toISOString()
+            };
+            
+            // Tambahkan ke data
+            appState.financeData.push(newTransaction);
+            
+            // Simpan ke localStorage
+            saveAllData();
+            
+            // Update tampilan
+            renderTransactionsList();
+            
+            // Sembunyikan form
+            document.getElementById('transactionForm').style.display = 'none';
+            
+            // Reset form
+            document.getElementById('financeForm').reset();
+            
+            // Tampilkan notifikasi
+            const typeText = transactionType === 'income' ? 'Pemasukan' : 'Pengeluaran';
+            showToast(`${typeText} berhasil ditambahkan`, 'success');
+            
+            // Update dashboard
+            updateDashboard();
+        }
+        
+        // Render daftar transaksi
+        function renderTransactionsList() {
+            const transactionsList = document.getElementById('transactionsList');
+            
+            // Hitung total saldo, pemasukan, dan pengeluaran
+            let totalIncome = 0;
+            let totalExpense = 0;
+            
+            appState.financeData.forEach(transaction => {
+                if (transaction.type === 'income') {
+                    totalIncome += transaction.amount;
+                } else {
+                    totalExpense += transaction.amount;
+                }
+            });
+            
+            const totalBalance = totalIncome - totalExpense;
+            
+            // Update ringkasan keuangan
+            document.getElementById('totalBalance').textContent = formatCurrency(totalBalance);
+            document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
+            document.getElementById('totalExpense').textContent = formatCurrency(totalExpense);
+            
+            // Urutkan transaksi dari yang terbaru
+            const sortedTransactions = [...appState.financeData].sort((a, b) => 
+                new Date(b.date) - new Date(a.date)
+            );
+            
+            if (sortedTransactions.length === 0) {
+                transactionsList.innerHTML = '<p class="empty-state">Belum ada transaksi. Tambah pemasukan atau pengeluaran pertama Anda.</p>';
+                return;
+            }
+            
+            // Buat HTML untuk daftar transaksi
+            let transactionsHTML = '';
+            
+            sortedTransactions.forEach(transaction => {
+                const isIncome = transaction.type === 'income';
+                const iconClass = isIncome ? 'income-icon' : 'expense-icon';
+                const amountClass = isIncome ? 'income-amount' : 'expense-amount';
+                const icon = isIncome ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
+                const sign = isIncome ? '+' : '-';
+                
+                transactionsHTML += `
+                    <div class="transaction-item">
+                        <div class="transaction-icon ${iconClass}">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="transaction-info">
+                            <h4>${transaction.description}</h4>
+                            <p>${formatDate(new Date(transaction.date))} • ${transaction.category}</p>
+                        </div>
+                        <div class="transaction-amount ${amountClass}">
+                            ${sign} ${formatCurrency(transaction.amount)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            transactionsList.innerHTML = transactionsHTML;
+        }
+        
+        // ============================================
+        // FUNGSI DASHBOARD
+        // ============================================
+        
+        // Update dashboard
+        function updateDashboard() {
+            // Update stats cards
+            updateStatsCards();
+            
+            // Update jadwal hari ini
+            updateTodaySchedule();
+            
+            // Update tugas mendesak
+            updateUrgentTasks();
+            
+            // Update habit progress
+            updateHabitProgress();
+            
+            // Update rekomendasi planner
+            updatePlannerRecommendation();
+        }
+        
+        // Update statistik di dashboard
+        function updateStatsCards() {
+            // Hitung tugas tertunda
+            const pendingTasksCount = appState.tasksData.filter(task => !task.completed).length;
+            document.getElementById('pendingTasks').textContent = pendingTasksCount;
+            
+            // Hitung habit streak tertinggi
+            const maxStreak = appState.habitsData.length > 0 ? 
+                Math.max(...appState.habitsData.map(h => h.streak)) : 0;
+            document.getElementById('habitStreak').textContent = maxStreak;
+            
+            // Hitung saldo saat ini
+            let totalIncome = 0;
+            let totalExpense = 0;
+            
+            appState.financeData.forEach(transaction => {
+                if (transaction.type === 'income') {
+                    totalIncome += transaction.amount;
+                } else {
+                    totalExpense += transaction.amount;
+                }
+            });
+            
+            const currentBalance = totalIncome - totalExpense;
+            document.getElementById('currentBalance').textContent = formatCurrency(currentBalance);
+            
+            // Hitung kelas hari ini
+            const today = new Date().toLocaleDateString('id-ID', { weekday: 'long' });
+            const todayClassesCount = appState.scheduleData.filter(cls => 
+                cls.day.toLowerCase() === today.toLowerCase()
+            ).length;
+            document.getElementById('todayClasses').textContent = todayClassesCount;
+        }
+        
+        // Update jadwal hari ini di dashboard
+        function updateTodaySchedule() {
+            const todayScheduleList = document.getElementById('todayScheduleList');
+            const today = new Date().toLocaleDateString('id-ID', { weekday: 'long' });
+            const todayClasses = appState.scheduleData.filter(cls => 
+                cls.day.toLowerCase() === today.toLowerCase()
+            );
+            
+            if (todayClasses.length === 0) {
+                todayScheduleList.innerHTML = '<p class="empty-state">Tidak ada jadwal hari ini</p>';
+                return;
+            }
+            
+            // Urutkan berdasarkan waktu mulai
+            todayClasses.sort((a, b) => a.startTime.localeCompare(b.startTime));
+            
+            let scheduleHTML = '';
+            
+            todayClasses.forEach(cls => {
+                scheduleHTML += `
+                    <div style="padding: 12px; background-color: rgba(37, 99, 235, 0.05); border-radius: 12px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>${cls.name}</strong>
+                            <span style="color: #2563eb; font-weight: 600;">${cls.startTime} - ${cls.endTime}</span>
+                        </div>
+                        <div style="font-size: 14px; color: #6b7280; margin-top: 4px;">
+                            <i class="fas fa-door-open"></i> ${cls.room}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            todayScheduleList.innerHTML = scheduleHTML;
+        }
+        
+        // Update tugas mendesak di dashboard
+        function updateUrgentTasks() {
+            const urgentTasksList = document.getElementById('urgentTasksList');
+            const now = new Date();
+            
+            // Ambil tugas yang belum selesai dan deadline dalam 3 hari
+            const urgentTasks = appState.tasksData.filter(task => {
+                if (task.completed) return false;
+                
+                const deadline = new Date(task.deadline);
+                const diffHours = (deadline - now) / (1000 * 60 * 60);
+                
+                return diffHours <= 72; // 3 hari
+            });
+            
+            // Urutkan berdasarkan deadline terdekat
+            urgentTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+            
+            if (urgentTasks.length === 0) {
+                urgentTasksList.innerHTML = '<p class="empty-state">Tidak ada tugas mendesak</p>';
+                return;
+            }
+            
+            let tasksHTML = '';
+            
+            // Ambil maksimal 3 tugas
+            urgentTasks.slice(0, 3).forEach(task => {
+                const deadlineDate = new Date(task.deadline);
+                const diffDays = Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24));
+                
+                let priorityBadge = '';
+                if (task.priority === 'high') {
+                    priorityBadge = '<span style="background-color: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">Tinggi</span>';
+                } else if (task.priority === 'medium') {
+                    priorityBadge = '<span style="background-color: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">Sedang</span>';
+                } else {
+                    priorityBadge = '<span style="background-color: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">Rendah</span>';
+                }
+                
+                let deadlineText = '';
+                if (diffDays < 0) {
+                    deadlineText = `<span style="color: #ef4444;">Terlambat ${Math.abs(diffDays)} hari</span>`;
+                } else if (diffDays === 0) {
+                    deadlineText = '<span style="color: #ef4444;">Hari ini</span>';
+                } else if (diffDays === 1) {
+                    deadlineText = '<span style="color: #f59e0b;">Besok</span>';
+                } else {
+                    deadlineText = `${diffDays} hari lagi`;
+                }
+                
+                tasksHTML += `
+                    <div style="padding: 12px; background-color: rgba(239, 68, 68, 0.05); border-left: 4px solid #ef4444; border-radius: 8px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <strong>${task.title}</strong>
+                            ${priorityBadge}
+                        </div>
+                        <div style="font-size: 14px; color: #6b7280;">
+                            <i class="fas fa-book"></i> ${task.subject} • 
+                            <i class="fas fa-calendar"></i> ${formatDate(deadlineDate)} • 
+                            ${deadlineText}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            urgentTasksList.innerHTML = tasksHTML;
+        }
+        
+        // Update habit progress di dashboard
+        function updateHabitProgress() {
+            const habitsProgress = document.getElementById('habitsProgress');
+            const today = new Date().toISOString().slice(0, 10);
+            
+            if (appState.habitsData.length === 0) {
+                habitsProgress.innerHTML = '<p class="empty-state">Belum ada habit yang dilacak</p>';
+                return;
+            }
+            
+            let habitsHTML = '';
+            let completedToday = 0;
+            
+            appState.habitsData.forEach(habit => {
+                const isCompletedToday = habit.completedDays.includes(today);
+                const progressPercent = Math.min(100, (habit.completedDays.length / 7) * 100);
+                
+                if (isCompletedToday) completedToday++;
+                
+                habitsHTML += `
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>${habit.name}</span>
+                            <span style="font-weight: 600;">${habit.streak} hari</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Tambahkan ringkasan
+            const totalHabits = appState.habitsData.length;
+            const completionRate = totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
+            
+            habitsHTML += `
+                <div style="margin-top: 16px; padding: 12px; background-color: rgba(16, 185, 129, 0.1); border-radius: 12px; text-align: center;">
+                    <div style="font-weight: 600; color: #10b981;">${completedToday}/${totalHabits} habit selesai hari ini</div>
+                    <div style="font-size: 14px; color: #6b7280;">${completionRate}% completion rate</div>
+                </div>
+            `;
+            
+            habitsProgress.innerHTML = habitsHTML;
+        }
+        
+        // Update rekomendasi planner di dashboard
+        function updatePlannerRecommendation() {
+            const plannerRecommendation = document.getElementById('plannerRecommendation');
+            
+            // Analisis data untuk rekomendasi
+            const pendingTasks = appState.tasksData.filter(task => !task.completed);
+            const urgentTasks = pendingTasks.filter(task => {
+                const deadline = new Date(task.deadline);
+                const now = new Date();
+                const diffHours = (deadline - now) / (1000 * 60 * 60);
+                return diffHours <= 48;
+            });
+            
+            const today = new Date().toISOString().slice(0, 10);
+            const habitsCompletedToday = appState.habitsData.filter(habit => 
+                habit.completedDays.includes(today)
+            ).length;
+            const totalHabits = appState.habitsData.length;
+            const habitCompletionRate = totalHabits > 0 ? 
+                Math.round((habitsCompletedToday / totalHabits) * 100) : 0;
+            
+            let recommendation = '';
+            
+            if (urgentTasks.length > 0) {
+                const mostUrgentTask = urgentTasks[0];
+                const taskName = mostUrgentTask.title;
+                const subject = mostUrgentTask.subject;
+                
+                recommendation = `
+                    <div style="padding: 16px; background-color: rgba(239, 68, 68, 0.1); border-radius: 12px; border-left: 4px solid #ef4444;">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Prioritas Tinggi!</strong>
+                        <p style="margin-top: 8px;">Tugas "${taskName}" (${subject}) mendekati deadline. Disarankan untuk mengerjakan segera.</p>
+                    </div>
+                `;
+            } else if (pendingTasks.length > 0) {
+                recommendation = `
+                    <div style="padding: 16px; background-color: rgba(59, 130, 246, 0.1); border-radius: 12px; border-left: 4px solid #3b82f6;">
+                        <strong><i class="fas fa-lightbulb"></i> Tips Produktivitas</strong>
+                        <p style="margin-top: 8px;">Anda memiliki ${pendingTasks.length} tugas tertunda. Rencanakan waktu untuk menyelesaikan 1-2 tugas hari ini.</p>
+                    </div>
+                `;
+            } else if (habitCompletionRate < 50 && totalHabits > 0) {
+                recommendation = `
+                    <div style="padding: 16px; background-color: rgba(245, 158, 11, 0.1); border-radius: 12px; border-left: 4px solid #f59e0b;">
+                        <strong><i class="fas fa-chart-line"></i> Perbaikan Habit</strong>
+                        <p style="margin-top: 8px;">Hanya ${habitCompletionRate}% habit yang selesai hari ini. Tingkatkan konsistensi untuk hasil terbaik.</p>
+                    </div>
+                `;
+            } else {
+                recommendation = `
+                    <div style="padding: 16px; background-color: rgba(16, 185, 129, 0.1); border-radius: 12px; border-left: 4px solid #10b981;">
+                        <strong><i class="fas fa-check-circle"></i> Bagus!</strong>
+                        <p style="margin-top: 8px;">Semua tugas dan habit Anda dalam kondisi baik. Pertahankan produktivitas ini!</p>
+                    </div>
+                `;
+            }
+            
+            plannerRecommendation.innerHTML = recommendation;
+        }
+        
+        // ============================================
+        // FUNGSI STATISTIK & CHART
+        // ============================================
+        
+        // Inisialisasi chart
+        function initCharts() {
+            updateCharts();
+            updateProductivityStats();
+        }
+        
+        // Update semua chart
+        function updateCharts() {
+            updateTasksChart();
+            updateHabitsChart();
+            updateFinanceChart();
+            updateProductivityStats();
+        }
+        
+        // Update chart tugas
+        function updateTasksChart() {
+            const ctx = document.getElementById('tasksChart').getContext('2d');
+            
+            // Hitung data
+            const completedTasks = appState.tasksData.filter(task => task.completed).length;
+            const pendingTasks = appState.tasksData.filter(task => !task.completed).length;
+            const totalTasks = appState.tasksData.length;
+            
+            // Hapus chart lama jika ada
+            if (window.tasksChart) {
+                window.tasksChart.destroy();
+            }
+            
+            // Buat chart baru
+            window.tasksChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Selesai', 'Tertunda'],
+                    datasets: [{
+                        data: [completedTasks, pendingTasks],
+                        backgroundColor: [
+                            '#10b981',
+                            '#ef4444'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#f5f7fb'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: `Total Tugas: ${totalTasks}`,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update chart habit
+        function updateHabitsChart() {
+            const ctx = document.getElementById('habitsChart').getContext('2d');
+            
+            // Hitung data streak
+            const streaks = appState.habitsData.map(habit => habit.streak);
+            const avgStreak = streaks.length > 0 ? 
+                Math.round(streaks.reduce((a, b) => a + b, 0) / streaks.length) : 0;
+            const maxStreak = streaks.length > 0 ? Math.max(...streaks) : 0;
+            const minStreak = streaks.length > 0 ? Math.min(...streeks) : 0;
+            
+            // Hapus chart lama jika ada
+            if (window.habitsChart) {
+                window.habitsChart.destroy();
+            }
+            
+            // Buat chart baru
+            window.habitsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: appState.habitsData.map(habit => habit.name.substring(0, 10) + (habit.name.length > 10 ? '...' : '')),
+                    datasets: [{
+                        label: 'Streak (hari)',
+                        data: streaks,
+                        backgroundColor: '#8b5cf6',
+                        borderColor: '#7c3aed',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Hari'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: `Rata-rata Streak: ${avgStreak} hari`,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update chart keuangan
+        function updateFinanceChart() {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            
+            // Hitung total pemasukan dan pengeluaran
+            let totalIncome = 0;
+            let totalExpense = 0;
+            
+            appState.financeData.forEach(transaction => {
+                if (transaction.type === 'income') {
+                    totalIncome += transaction.amount;
+                } else {
+                    totalExpense += transaction.amount;
+                }
+            });
+            
+            // Hapus chart lama jika ada
+            if (window.financeChart) {
+                window.financeChart.destroy();
+            }
+            
+            // Buat chart baru
+            window.financeChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Pemasukan', 'Pengeluaran'],
+                    datasets: [{
+                        data: [totalIncome, totalExpense],
+                        backgroundColor: [
+                            '#10b981',
+                            '#ef4444'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#f5f7fb'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: `Saldo: ${formatCurrency(totalIncome - totalExpense)}`,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update statistik produktivitas
+        function updateProductivityStats() {
+            const completedTasks = appState.tasksData.filter(task => task.completed).length;
+            const totalTasks = appState.tasksData.length;
+            const taskCompletionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            const totalHabitDays = appState.habitsData.reduce((sum, habit) => sum + habit.completedDays.length, 0);
+            const avgHabitCompletion = appState.habitsData.length > 0 ? 
+                Math.round((totalHabitDays / (appState.habitsData.length * 7)) * 100) : 0;
+            
+            // Hitung tingkat produktivitas (rata-rata task completion dan habit completion)
+            const productivityRate = Math.round((taskCompletionRate + avgHabitCompletion) / 2);
+            
+            document.getElementById('completedTasksStat').textContent = `${completedTasks}/${totalTasks}`;
+            document.getElementById('totalHabitDays').textContent = totalHabitDays;
+            document.getElementById('productivityRate').textContent = `${productivityRate}%`;
+        }
+        
+        // ============================================
+        // FUNGSI SMART PLANNER
+        // ============================================
+        
+        // Update analisis planner
+        function updatePlannerAnalysis() {
+            const plannerAnalysis = document.getElementById('plannerAnalysis');
+            const optimalSchedule = document.getElementById('optimalSchedule');
+            const deadlineAnalysis = document.getElementById('deadlineAnalysis');
+            
+            // Analisis tugas
+            const pendingTasks = appState.tasksData.filter(task => !task.completed);
+            const urgentTasks = pendingTasks.filter(task => {
+                const deadline = new Date(task.deadline);
+                const now = new Date();
+                const diffHours = (deadline - now) / (1000 * 60 * 60);
+                return diffHours <= 48;
+            });
+            
+            // Analisis habit
+            const today = new Date().toISOString().slice(0, 10);
+            const incompleteHabits = appState.habitsData.filter(habit => 
+                !habit.completedDays.includes(today)
+            );
+            
+            // Analisis jadwal
+            const currentDay = new Date().toLocaleDateString('id-ID', { weekday: 'long' });
+            const todayClasses = appState.scheduleData.filter(cls => 
+                cls.day.toLowerCase() === currentDay.toLowerCase()
+            );
+            
+            // Buat analisis
+            let analysisHTML = '';
+            
+            if (urgentTasks.length > 0) {
+                analysisHTML += `
+                    <div style="margin-bottom: 16px;">
+                        <strong><i class="fas fa-exclamation-circle" style="color: #ef4444;"></i> Deadline Mendekati</strong>
+                        <p>Ada ${urgentTasks.length} tugas dengan deadline dekat. Prioritaskan untuk menyelesaikannya hari ini.</p>
+                    </div>
+                `;
+            }
+            
+            if (incompleteHabits.length > 0) {
+                analysisHTML += `
+                    <div style="margin-bottom: 16px;">
+                        <strong><i class="fas fa-chart-line" style="color: #8b5cf6;"></i> Habit yang Perlu Diselesaikan</strong>
+                        <p>Masih ada ${incompleteHabits.length} habit yang belum dicentang hari ini.</p>
+                    </div>
+                `;
+            }
+            
+            if (todayClasses.length > 0) {
+                const classNames = todayClasses.map(cls => cls.name).join(', ');
+                analysisHTML += `
+                    <div style="margin-bottom: 16px;">
+                        <strong><i class="fas fa-calendar-alt" style="color: #2563eb;"></i> Jadwal Kelas Hari Ini</strong>
+                        <p>Anda memiliki ${todayClasses.length} kelas: ${classNames}</p>
+                    </div>
+                `;
+            }
+            
+            if (analysisHTML === '') {
+                analysisHTML = '<p>Tidak ada analisis khusus untuk hari ini. Pertahankan produktivitas Anda!</p>';
+            }
+            
+            plannerAnalysis.innerHTML = analysisHTML;
+            
+            // Buat jadwal optimal
+            let optimalHTML = '';
+            
+            if (todayClasses.length > 0 || pendingTasks.length > 0) {
+                optimalHTML = `
+                    <div style="background-color: rgba(37, 99, 235, 0.05); padding: 16px; border-radius: 12px;">
+                        <h4 style="margin-bottom: 12px;">Rekomendasi Jadwal:</h4>
+                `;
+                
+                // Tambahkan kelas hari ini
+                if (todayClasses.length > 0) {
+                    todayClasses.forEach(cls => {
+                        optimalHTML += `
+                            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                <div style="width: 12px; height: 12px; background-color: #2563eb; border-radius: 50%; margin-right: 12px;"></div>
+                                <div>
+                                    <strong>${cls.startTime} - ${cls.endTime}</strong>: ${cls.name} (${cls.room})
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Tambahkan waktu belajar untuk tugas
+                if (pendingTasks.length > 0) {
+                    optimalHTML += `
+                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                            <div style="width: 12px; height: 12px; background-color: #10b981; border-radius: 50%; margin-right: 12px;"></div>
+                            <div>
+                                <strong>19:00 - 21:00</strong>: Waktu belajar (${pendingTasks.length} tugas tertunda)
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Tambahkan waktu habit
+                if (incompleteHabits.length > 0) {
+                    optimalHTML += `
+                        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                            <div style="width: 12px; height: 12px; background-color: #8b5cf6; border-radius: 50%; margin-right: 12px;"></div>
+                            <div>
+                                <strong>06:00 - 07:00</strong>: Waktu habit (${incompleteHabits.length} habit tersisa)
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                optimalHTML += '</div>';
+            } else {
+                optimalHTML = '<p class="empty-state">Tidak ada kelas atau tugas hari ini. Manfaatkan waktu untuk review materi atau istirahat.</p>';
+            }
+            
+            optimalSchedule.innerHTML = optimalHTML;
+            
+            // Buat analisis deadline
+            let deadlineHTML = '';
+            
+            if (pendingTasks.length > 0) {
+                deadlineHTML = '<div style="background-color: rgba(239, 68, 68, 0.05); padding: 16px; border-radius: 12px;">';
+                deadlineHTML += '<h4 style="margin-bottom: 12px;">Analisis Deadline:</h4>';
+                
+                // Ambil 3 tugas dengan deadline terdekat
+                const nearestTasks = [...pendingTasks]
+                    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+                    .slice(0, 3);
+                
+                nearestTasks.forEach(task => {
+                    const deadlineDate = new Date(task.deadline);
+                    const now = new Date();
+                    const diffDays = Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24));
+                    
+                    let urgencyLevel = '';
+                    if (diffDays <= 1) {
+                        urgencyLevel = '<span style="color: #ef4444; font-weight: 600;">SANGAT MENDESAK</span>';
+                    } else if (diffDays <= 3) {
+                        urgencyLevel = '<span style="color: #f59e0b; font-weight: 600;">MENDESAK</span>';
+                    } else {
+                        urgencyLevel = '<span style="color: #10b981; font-weight: 600;">NORMAL</span>';
+                    }
+                    
+                    deadlineHTML += `
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <strong>${task.title}</strong>
+                                ${urgencyLevel}
+                            </div>
+                            <div style="font-size: 14px; color: #6b7280;">
+                                ${formatDate(deadlineDate)} (${diffDays} hari lagi) • ${task.subject}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                deadlineHTML += '</div>';
+            } else {
+                deadlineHTML = '<p class="empty-state">Tidak ada deadline mendesak. Semua tugas sudah selesai!</p>';
+            }
+            
+            deadlineAnalysis.innerHTML = deadlineHTML;
+        }
+        
+        // ============================================
+        // FUNGSI UTILITAS
+        // ============================================
+        
+        // Update tanggal saat ini
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            
+            const formattedDate = now.toLocaleDateString('id-ID', options);
+            document.getElementById('currentDate').textContent = formattedDate;
+        }
+        
+        // Format tanggal
+        function formatDate(date) {
+            return date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+        
+        // Format mata uang
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        // Dapatkan ikon berdasarkan kategori habit
+        function getCategoryIcon(category) {
+            const icons = {
+                'kesehatan': 'heartbeat',
+                'belajar': 'book',
+                'produktivitas': 'check-circle',
+                'hobi': 'palette',
+                'lainnya': 'star'
+            };
+            
+            return icons[category] || 'star';
+        }
+        
+        // Tampilkan toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastIcon = toast.querySelector('.toast-icon i');
+            const toastMessage = toast.querySelector('.toast-message');
+            
+            // Update konten toast
+            toastMessage.textContent = message;
+            
+            // Update styling berdasarkan type
+            toast.className = 'toast'; // Reset class
+            toast.classList.add(`toast-${type}`);
+            
+            // Tampilkan toast
+            toast.classList.add('show');
+            
+            // Sembunyikan toast setelah 3 detik
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Generate data contoh untuk pengguna baru
+        function generateSampleData() {
+            // Hanya generate jika data kosong
+            if (appState.scheduleData.length === 0 && 
+                appState.tasksData.length === 0 && 
+                appState.habitsData.length === 0 && 
+                appState.financeData.length === 0) {
+                
+                // Data jadwal contoh
+                appState.scheduleData = [
+                    {
+                        id: 1,
+                        name: 'Matematika',
+                        day: 'Senin',
+                        startTime: '07:00',
+                        endTime: '08:30',
+                        room: 'Ruang 101'
+                    },
+                    {
+                        id: 2,
+                        name: 'Fisika',
+                        day: 'Selasa',
+                        startTime: '09:00',
+                        endTime: '10:30',
+                        room: 'Lab Fisika'
+                    },
+                    {
+                        id: 3,
+                        name: 'Kimia',
+                        day: 'Rabu',
+                        startTime: '10:00',
+                        endTime: '11:30',
+                        room: 'Lab Kimia'
+                    }
+                ];
+                
+                // Data tugas contoh
+                appState.tasksData = [
+                    {
+                        id: 1,
+                        title: 'Tugas Matematika Integral',
+                        subject: 'Matematika',
+                        description: 'Kerjakan soal integral halaman 45-50',
+                        deadline: new Date(Date.now() + 86400000).toISOString().slice(0, 16), // Besok
+                        priority: 'high',
+                        completed: false,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        title: 'Laporan Praktikum Fisika',
+                        subject: 'Fisika',
+                        description: 'Laporan percobaan hukum Newton',
+                        deadline: new Date(Date.now() + 172800000).toISOString().slice(0, 16), // 2 hari lagi
+                        priority: 'medium',
+                        completed: true,
+                        createdAt: new Date(Date.now() - 86400000).toISOString()
+                    }
+                ];
+                
+                // Data habit contoh
+                const today = new Date().toISOString().slice(0, 10);
+                const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+                
+                appState.habitsData = [
+                    {
+                        id: 1,
+                        name: 'Olahraga 30 menit',
+                        category: 'kesehatan',
+                        targetPerWeek: 5,
+                        completedDays: [today, yesterday],
+                        streak: 2,
+                        createdAt: new Date(Date.now() - 172800000).toISOString()
+                    },
+                    {
+                        id: 2,
+                        name: 'Membaca 10 halaman',
+                        category: 'belajar',
+                        targetPerWeek: 7,
+                        completedDays: [today],
+                        streak: 1,
+                        createdAt: new Date(Date.now() - 86400000).toISOString()
+                    }
+                ];
+                
+                // Data keuangan contoh
+                appState.financeData = [
+                    {
+                        id: 1,
+                        amount: 500000,
+                        category: 'uang saku',
+                        description: 'Uang saku bulanan',
+                        date: new Date().toISOString().slice(0, 10),
+                        type: 'income',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        amount: 75000,
+                        category: 'makanan',
+                        description: 'Makan siang',
+                        date: new Date().toISOString().slice(0, 10),
+                        type: 'expense',
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                
+                // Simpan data contoh
+                saveAllData();
+                
+                // Update tampilan
+                renderScheduleTable();
+                renderTasksList();
+                renderHabitsList();
+                renderTransactionsList();
+                updateDashboard();
+                updateCharts();
+                updatePlannerAnalysis();
+                
+                showToast('Data contoh telah dibuat untuk Anda', 'info');
+            }
+        }
+        
+        // Panggil fungsi generateSampleData jika diperlukan
+        // Uncomment baris berikut untuk mengaktifkan data contoh otomatis
+        // setTimeout(generateSampleData, 1000);
+    </script>
+</body>
+</html>
